@@ -1,0 +1,52 @@
+[user]
+    name = Aleš Vojta
+
+[push]
+    default = simple
+
+[core]
+    excludesfile = ~/.gitignore_global
+    autocrlf = input
+    whitespace = trailing-space
+
+[color]
+    ui = auto
+
+[merge]
+  ff = only
+
+[rebase]
+    autosquash = true
+
+[diff]
+  colorMoved = zebra
+
+[alias]
+    aa = add --all
+    ap = add --patch
+    br = branch
+    ci = commit --verbose
+    co = checkout
+    ld = log --pretty=format:'%C(red)%h%C(reset) %C(green)%ad%C(yellow)%d %C(reset)%s%C(bold blue) [%cn]' --decorate --date=short
+    lg = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' --abbrev-commit
+    ls = log --pretty=format:'%C(red)%h%C(reset) %C(green)%ad%C(yellow)%d %C(reset)%s%C(bold blue) [%cn]' --decorate --date=relative
+    pf = push --force-with-lease
+    st = status
+
+    alias = config --get-regexp ^alias\\.
+    amend = commit --amend
+    branch-name = "!git rev-parse --abbrev-ref HEAD" # Get the current branch name (not so useful in itself, but used in other aliases)
+    branches = for-each-ref --sort=-committerdate --format=\"%(color:blue)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes
+    delete-merged-branches = "!git co master && git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d" # Delete any branches that have been merged into master
+    diffc = diff --cached
+    fixup = commit --fixup=HEAD
+    last = log -1 HEAD
+    publish = "!git push -u origin $(git branch-name)" # Push the current branch to the remote "origin", and set it to track the upstream branch
+    undoc = reset --soft HEAD~1
+    unpublish = "!git push origin :$(git branch-name)" # Delete the remote version of the current branch
+    unstage = reset HEAD --
+    wipe = !git add --all && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard # Commits everything in working directory and does a hard reset to remove that commit. Run the `git reflog` command and find the SHA of the commit
+
+# Allow local customizations in the .gitconfig_local file
+[include]
+	path = ~/.gitconfig_local
