@@ -46,6 +46,7 @@
     unpublish = "!git push origin :$(git branch-name)" # Delete the remote version of the current branch
     unstage = reset HEAD --
     wipe = !git add --all && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard # Commits everything in working directory and does a hard reset to remove that commit. Run the `git reflog` command and find the SHA of the commit
+    wip = !git aa && git ci -qm "WIP"
 
 # Allow local customizations in the .gitconfig_local file
 [include]
