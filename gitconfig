@@ -1,9 +1,6 @@
 [user]
     name = Aleš Vojta
 
-[push]
-    default = simple
-
 [core]
     excludesfile = ~/.gitignore_global
     autocrlf = input
@@ -11,6 +8,12 @@
 
 [color]
     ui = auto
+
+[push]
+    default = simple
+
+[fetch]
+    prune = true
 
 [merge]
   ff = only
