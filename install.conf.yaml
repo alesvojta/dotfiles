@@ -17,3 +17,5 @@
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
+    - [defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "$HOME/code/dotfiles", Specify the iTerm2 preferences directory]
+    - [defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true, Tell iTerm2 to use the custom preferences in the directory]
