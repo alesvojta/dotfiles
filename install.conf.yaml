@@ -1,10 +1,13 @@
+# Default options for plugins can be specified so that options don't have to be repeated many times
 - defaults:
     link:
       relink: true
       create: true
 
+# Clean commands specify directories that should be checked for dead symbolic links
 - clean: ["~"]
 
+# Link commands specify how files and directories should be symbolically linked
 - link:
     ~/.dotfiles: ""
     ~/.vimrc:
@@ -12,10 +15,13 @@
     ~/.gitconfig:
     ~/.gitignore_global:
 
+# Create commands specify empty directories to be created
 - create:
+    - ~/code
     - ~/.vim/undo-history
 
+# Shell commands specify shell commands to be run
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
-    - [defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "$HOME/code/dotfiles", Specify the iTerm2 preferences directory]
+    - [defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.dotfiles", Specify the iTerm2 preferences directory]
     - [defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true, Tell iTerm2 to use the custom preferences in the directory]
