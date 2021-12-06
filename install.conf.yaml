@@ -14,10 +14,14 @@
     ~/.zshrc:
     ~/.gitconfig:
     ~/.gitignore_global:
+    ~/.config/:
+      glob: true
+      path: config/*
 
 # Create commands specify empty directories to be created
 - create:
-    - ~/code
+    - ~/projects
+    - ~/.config
     - ~/.vim/undo-history
 
 # Shell commands specify shell commands to be run
