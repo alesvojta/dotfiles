@@ -17,6 +17,7 @@
 \#*\#
 \.#*
 .ipynb_checkpoints/
+.idea/
 
 # Logs and databases #
 ######################
@@ -33,3 +34,8 @@
 #Icon?
 ehthumbs.db
 Thumbs.db
+
+# Custom rules #
+################
+.yalc/
+yalc.lock
