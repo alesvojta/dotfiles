@@ -1,5 +1,8 @@
 [user]
-    name = Aleš Vojta
+    name = Aleš VOJTA
+
+[credential]
+    username = ales.vojta
 
 [core]
     excludesfile = ~/.gitignore_global
@@ -48,7 +51,8 @@
     wipe = !git add --all && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard # Commits everything in working directory and does a hard reset to remove that commit. Run the `git reflog` command and find the SHA of the commit
     wip = !git aa && git ci -qm "WIP"
     pullhead = 'git pull origin $(git rev-parse --abbrev-ref HEAD)'
+    master = "!git co master && git pull && git delete-merged-branches"
 
 # Allow local customizations in the .gitconfig_local file
 [include]
-	path = ~/.gitconfig_local
+    path = ~/.gitconfig_local
