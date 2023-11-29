@@ -52,7 +52,6 @@ if &term =~ '^screen'
     set ttymouse=xterm2
 endif
 
-colo delek
 set laststatus=2
 
 hi User1 ctermbg=black ctermfg=lightgrey guibg=black guifg=white
