@@ -1,0 +1,137 @@
+# Global Git configuration file for Aleš VOJTA
+# This file sets up user information, default behaviors, and convenient aliases for Git commands.
+
+[init]
+  # Default branch name for newly initialized repositories
+  defaultBranch = main
+
+[core]
+  # Default editor for commit messages and interactive rebases
+  editor = vim
+  # Path to the global .gitignore file
+  excludesfile = ~/.gitignore_global
+  # Normalize line endings to LF on commit (ensures cross-platform compatibility)
+  autocrlf = input
+  # Highlight trailing whitespace as an error
+  whitespace = trailing-space
+
+[user]
+  name = Aleš VOJTA
+  # Email is set per-machine to avoid leaking it in a shared dotfiles repo
+  # email = ...
+
+[credential]
+  username = ales.vojta
+  # Use macOS Keychain to store credentials securely
+  helper = osxkeychain
+
+[rerere]
+  # Remember how merge conflicts were resolved and reuse the solution automatically
+  enabled = true
+
+[color]
+  # Enable colored output in the terminal
+  ui = auto
+
+[fetch]
+  # Automatically remove remote-tracking branches that no longer exist on the remote
+  prune = true
+
+[pull]
+  # Rebase local commits on top of fetched commits instead of creating a merge commit
+  rebase = true
+
+[push]
+  # Push to the branch with the same name on the remote
+  default = simple
+  # Automatically set upstream tracking when pushing a new branch for the first time
+  autoSetupRemote = true
+
+[rebase]
+  # Automatically apply --squash and --fixup commits during interactive rebase
+  autosquash = true
+
+[diff]
+  # Highlight moved code blocks with distinct colors to distinguish them from additions/deletions
+  colorMoved = zebra
+
+[log]
+  # Show abbreviated commit SHA hashes in log output
+  abbrevCommit = true
+
+[alias]
+  # --- Shortcuts ---
+  # Stage all changes in the working directory
+  aa = add --all
+  # Interactively stage changes hunk by hunk
+  ap = add --patch
+  # List all local branches
+  br = branch
+  # Commit with the full diff shown in the editor
+  ci = commit --verbose
+  # Switch branches (modern replacement for `git checkout <branch>`)
+  sw = switch
+  # Restore working tree files (modern replacement for `git checkout -- <file>`)
+  rs = restore
+  # Safer force push – fails if the remote has been updated since last fetch
+  pf = push --force-with-lease
+  # Show working tree status
+  st = status
+
+  # --- Logging ---
+  # Show details of the last commit
+  last = log -1 HEAD
+  # Compact one-line log with short date
+  ld = log --pretty=format:'%C(red)%h%C(reset) %C(green)%ad%C(yellow)%d %C(reset)%s%C(bold blue) [%cn]' --decorate --date=short
+  # Graphical branch history log
+  lg = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' --abbrev-commit
+  # Compact one-line log with relative date (e.g. "2 days ago")
+  ls = log --pretty=format:'%C(red)%h%C(reset) %C(green)%ad%C(yellow)%d %C(reset)%s%C(bold blue) [%cn]' --decorate --date=relative
+
+  # --- Diffing ---
+  # Show diff of staged (cached) changes not yet committed
+  diffc = diff --cached
+
+  # --- Committing ---
+  # Amend the last commit and include all currently modified and new files
+  amend = commit --all --amend
+  # Create a fixup commit targeting HEAD (consumed by autosquash during rebase)
+  fixup = commit --all --fixup=HEAD
+  # Save a quick Work In Progress commit
+  wip = !git aa && git ci -qm "WIP"
+  # Commit everything as a savepoint, then hard reset – use `git reflog` to recover the SHA
+  wipe = !git add --all && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+
+  # --- Undoing ---
+  # Undo the last commit but keep all changes staged
+  undoc = reset --soft HEAD~1
+  # Unstage a file without discarding its changes
+  unstage = reset HEAD --
+
+  # --- Branch management ---
+  # Get the current branch name (used as a helper in other aliases)
+  branch-name = "!git rev-parse --abbrev-ref HEAD"
+  # Get the default branch name from the remote – works for both main and master
+  default-branch = "!git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'"
+  # List all remote branches sorted by most recent commit
+  branches = for-each-ref --sort=-committerdate --format=\"%(color:blue)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes
+  # Switch to the default branch, pull latest changes, and delete merged branches
+  main = "!git sw $(git default-branch) && git pull && git delete-merged-branches"
+  # Delete all local branches that have already been merged into the default branch
+  delete-merged-branches = "!git sw $(git default-branch) && git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+
+  # --- Remote / Publishing ---
+  # Push the current branch to origin and set it to track the upstream branch
+  publish = "!git push -u origin $(git branch-name)"
+  # Delete the remote branch for the current branch
+  unpublish = "!git push origin :$(git branch-name)"
+  # Pull the latest changes for the current branch from origin
+  pullhead = "!git pull origin $(git branch-name)"
+
+  # --- Utility ---
+  # List all configured git aliases
+  alias = config --get-regexp ^alias\\.
+
+# Allow local customizations in the .gitconfig_local file
+[include]
+  path = ~/.gitconfig_local

@@ -1,0 +1,10 @@
+theme = Catppuccin Macchiato
+
+window-padding-x = 10
+window-padding-y = 0
+window-padding-balance = true
+background-opacity = 0.75
+background-blur = macos-glass-regular
+macos-titlebar-style = tabs
+
+keybind = global:ctrl+`=toggle_visibility
