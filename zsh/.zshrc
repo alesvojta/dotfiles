@@ -1,9 +1,13 @@
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/bin:$PATH"
 
-export JAVA17_HOME=$(/usr/libexec/java_home -v 17)
-export JAVA21_HOME=$(/usr/libexec/java_home -v 21)
-export JAVA_HOME=$JAVA21_HOME
+# Set JAVA{version}_HOME only if that JDK is installed
+for _java_v in 17 21; do
+  /usr/libexec/java_home -v $_java_v &>/dev/null && export JAVA${_java_v}_HOME=$(/usr/libexec/java_home -v $_java_v)
+done
+unset _java_v
+# Prefer Java 21, fall back to 17, or leave unset
+export JAVA_HOME=${JAVA21_HOME:-${JAVA17_HOME:-}}
 
 ZSH_THEME=""
 HIST_STAMPS="dd.mm.yyyy"
