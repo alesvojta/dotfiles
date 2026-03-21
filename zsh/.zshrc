@@ -8,7 +8,7 @@ export JAVA_HOME=$JAVA21_HOME
 ZSH_THEME=""
 HIST_STAMPS="dd.mm.yyyy"
 
-plugins=(git yarn zsh-autosuggestions zsh-syntax-highlighting zsh-completions tmux fzf zoxide)
+plugins=(git yarn zsh-autosuggestions zsh-syntax-highlighting zsh-completions fzf zoxide)
 source $ZSH/oh-my-zsh.sh
 
 eval "$(starship init zsh)"
@@ -22,7 +22,16 @@ git_switch_fzf() {
   git switch "$branch"
 }
 alias gco=git_switch_fzf
-alias v="fd --type f --hidden --exclude .git | fzf-tmux -p --reverse | xargs nvim"
+
+# Fuzzy file opener using fzf with a preview of the first 200 lines.
+v() {
+  local file
+  file=$(fd --type f --hidden --exclude .git | \
+    fzf --height=70% --layout=reverse --border --padding=1 \
+        --preview 'bat --style=numbers --color=always --theme="Catppuccin Macchiato" {}') || return
+  nvim "$file"
+}
+
 alias vim="nvim"
 alias zshrc="nvim ~/.zshrc"
 alias zshrcs="source ~/.zshrc"
