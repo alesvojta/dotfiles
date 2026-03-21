@@ -10,6 +10,7 @@ right_format = """$time$battery"""
 
 # Starship modules
 [directory]
+truncation_length = 5
 truncation_symbol = "…/"
 
 [character]
