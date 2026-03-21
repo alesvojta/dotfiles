@@ -34,14 +34,14 @@ Unstow specific packages:
 
 ## Packages
 
-| Package    | Target file(s)                              |
-|------------|---------------------------------------------|
-| `ghostty`  | `~/.config/ghostty/config.ghostty`          |
-| `git`      | `~/.gitconfig`, `~/.gitignore_global`       |
-| `starship` | `~/.config/starship.toml`                   |
-| `tmux`     | `~/.tmux.conf`                              |
-| `vim`      | `~/.vimrc`                                  |
-| `zsh`      | `~/.zshrc`                                  |
+| Package      | Target file(s)                              |
+|--------------|---------------------------------------------|
+| `bettermouse`| `~/bettermouse.plist`                       |
+| `ghostty`    | `~/.config/ghostty/config.ghostty`          |
+| `git`        | `~/.gitconfig`, `~/.gitignore_global`       |
+| `nvim`       | `~/.config/nvim/`                           |
+| `starship`   | `~/.config/starship.toml`                   |
+| `zsh`        | `~/.zshrc`                                  |
 
 Add new packages by creating a top-level folder and placing dotfiles inside it.
 Hidden directories (starting with `.`, e.g. `.git`, `.idea`) are automatically excluded.
