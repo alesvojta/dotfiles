@@ -24,5 +24,5 @@ git_switch_fzf() {
 alias gco=git_switch_fzf
 alias v="fd --type f --hidden --exclude .git | fzf-tmux -p --reverse | xargs nvim"
 alias vim="nvim"
-alias zshrc="vim ~/.zshrc"
+alias zshrc="nvim ~/.zshrc"
 alias zshrcs="source ~/.zshrc"
