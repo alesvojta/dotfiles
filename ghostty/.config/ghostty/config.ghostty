@@ -1,19 +1,16 @@
 theme = Catppuccin Macchiato
-
 macos-titlebar-style = hidden
 
 window-padding-x = 10
 window-padding-y = 0
 window-padding-balance = true
 
-background-opacity = 0.75
+background-opacity = 0.85
 background-blur = macos-glass-regular
 
 font-thicken = true
 
 shell-integration-features = no-cursor
-cursor-style = underline
+cursor-style = block
 
 clipboard-trim-trailing-spaces = true
-
-keybind = global:ctrl+`=toggle_visibility
