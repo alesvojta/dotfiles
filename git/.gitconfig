@@ -7,7 +7,7 @@
 
 [core]
   # Default editor for commit messages and interactive rebases
-  editor = vim
+  editor = nvim
   # Path to the global .gitignore file
   excludesfile = ~/.gitignore_global
   # Normalize line endings to LF on commit (ensures cross-platform compatibility)
@@ -24,6 +24,9 @@
   username = ales.vojta
   # Use macOS Keychain to store credentials securely
   helper = osxkeychain
+
+[blame]
+  ignoreRevsFile = .git-blame-ignore-revs
 
 [rerere]
   # Remember how merge conflicts were resolved and reuse the solution automatically
@@ -69,6 +72,8 @@
   br = branch
   # Commit with the full diff shown in the editor
   ci = commit --verbose
+  # Checkout a branch or create and switch to a new branch
+  co = checkout
   # Switch branches (modern replacement for `git checkout <branch>`)
   sw = switch
   # Restore working tree files (modern replacement for `git checkout -- <file>`)
@@ -98,7 +103,7 @@
   # Create a fixup commit targeting HEAD (consumed by autosquash during rebase)
   fixup = commit --all --fixup=HEAD
   # Save a quick Work In Progress commit
-  wip = !git aa && git ci -qm "WIP"
+  wip = !git aa && git ci -qm "WIP" --no-verify
   # Commit everything as a savepoint, then hard reset – use `git reflog` to recover the SHA
   wipe = !git add --all && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
 
