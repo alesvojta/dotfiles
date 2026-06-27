@@ -39,3 +39,5 @@ Thumbs.db
 .idea/
 .yalc/
 yalc.lock
+
+**/.claude/settings.local.json
