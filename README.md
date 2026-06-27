@@ -40,7 +40,7 @@ Unstow specific packages:
 | `ghostty`    | `~/.config/ghostty/config.ghostty`          |
 | `git`        | `~/.gitconfig`, `~/.gitignore_global`       |
 | `nvim`       | `~/.config/nvim/`                           |
-| `starship`   | `~/.config/starship.toml`                   |
+| `ohmyposh`   | `~/.config/ohmyposh.toml`                   |
 | `zsh`        | `~/.zshrc`                                  |
 
 Add new packages by creating a top-level folder and placing dotfiles inside it.

@@ -15,7 +15,9 @@ HIST_STAMPS="dd.mm.yyyy"
 plugins=(git yarn zsh-autosuggestions zsh-syntax-highlighting zsh-completions fzf zoxide)
 source $ZSH/oh-my-zsh.sh
 
-eval "$(starship init zsh)"
+if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
+  eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh.toml)"
+fi
 eval "$(fnm env --use-on-cd)"
 
 # Fuzzy git branch switcher using fzf with a preview of the last 20 commits.
