@@ -1,5 +1,6 @@
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/bin:$PATH"
+export NODE_EXTRA_CA_CERTS="$HOME/company-ca.pem"
 
 # Set JAVA{version}_HOME only if that JDK is installed
 for _java_v in 17 21; do
@@ -12,12 +13,14 @@ export JAVA_HOME=${JAVA21_HOME:-${JAVA17_HOME:-}}
 ZSH_THEME=""
 HIST_STAMPS="dd.mm.yyyy"
 
-plugins=(git yarn zsh-autosuggestions zsh-syntax-highlighting zsh-completions fzf zoxide)
+plugins=(git yarn zsh-autosuggestions zsh-syntax-highlighting zsh-completions fzf )
 source $ZSH/oh-my-zsh.sh
 
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh.toml)"
 fi
+# eval "$(starship init zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 eval "$(fnm env --use-on-cd)"
 
 # Fuzzy git branch switcher using fzf with a preview of the last 20 commits.
@@ -38,6 +41,7 @@ v() {
   nvim "$file"
 }
 
+alias vi="nvim"
 alias vim="nvim"
 alias zshrc="nvim ~/.zshrc"
 alias zshrcs="source ~/.zshrc"
