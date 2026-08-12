@@ -2,3 +2,5 @@
 
 pi/**/pi-permission-system/logs
 pi/**/supacode
+
+zed/.config/zed/prompts/*.mdb
