@@ -1,16 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/gotgenes/pi-permission-system/main/schemas/permissions.schema.json",
-
   "debugLog": false,
   "permissionReviewLog": true,
-  "yoloMode": false,
+  "yoloMode": true,
   "piInfrastructureReadPaths": [
     "~/Library/**/node_modules/@earendil-works/pi-coding-agent/**"
   ],
-
   "permission": {
     "*": "ask",
-
     "path": {
       "*": "allow",
       "*.env": "deny",
@@ -18,26 +15,28 @@
       "*.env.example": "allow",
       "~/.ssh/*": "deny"
     },
-
     "read": "allow",
     "write": "allow",
     "edit": "allow",
     "grep": "allow",
     "find": "allow",
     "ls": "allow",
-
     "kb_read": "allow",
+    "knowledge_search": "allow",
     "session_search": "allow",
+    "session_list": "allow",
     "session_read": "allow",
     "memory_search": "allow",
     "memory_remember": "allow",
     "memory_stats": "allow",
     "memory_lessons": "allow",
     "memory_forget": "allow",
-    "subagents": "allow",
     "subagent": "allow",
-    "intercom": "allow",
-
+    "subagent_done": "allow",
+    "subagent_resume": "allow",
+    "subagent_interrupt": "allow",
+    "subagents_list": "allow",
+    "caller_ping": "allow",
     "bash": {
       "*": "ask",
       "true": "allow",
@@ -45,7 +44,7 @@
       ".agents/skills/pr-summary/scripts/pr-diff.sh *": "allow",
       ".agents/skills/standup-summary/scripts/collect-standup-git-history.sh *": "allow",
       "/usr/bin/time *": "allow",
-
+      "jq *": "allow",
       "ls *": "allow",
       "cd *": "allow",
       "pwd *": "allow",
@@ -62,10 +61,10 @@
       "rg *": "allow",
       "find *": "allow",
       "nl *": "allow",
+      "cmux *": "allow",
       "sed -n *": "allow",
       "sed * > *": "ask",
       "sed -i *": "ask",
-
       "git status *": "allow",
       "git log *": "allow",
       "git diff *": "allow",
@@ -93,15 +92,15 @@
       "git filter-branch *": "deny",
       "git filter-repo *": "deny",
       "git reflog expire --expire=now --all": "deny",
-
       "yarn tsx *": "allow",
       "yarn workspace *": "allow",
+      "yarn prettier *": "allow",
+      "yarn eslint *": "allow",
       "npm publish": "ask",
       "yarn publish": "ask",
       "npm run deploy": "ask",
       "yarn deploy": "ask",
       "yarn run *:prod": "ask",
-
       "DELETE FROM *": "ask",
       "ALTER TABLE * DROP COLUMN *": "ask",
       "DROP INDEX *": "ask",
@@ -110,19 +109,16 @@
       "DROP SCHEMA *": "deny",
       "TRUNCATE TABLE *": "deny",
       "TRUNCATE *": "deny",
-
       "redis-cli CONFIG RESETSTAT": "ask",
       "dropdb *": "deny",
       "psql * -c \"DROP *\"": "deny",
       "mongo * --eval \"db.dropDatabase()\"": "deny",
       "redis-cli FLUSHALL": "deny",
       "redis-cli FLUSHDB": "deny",
-
       "npx prisma migrate reset": "deny",
       "npx prisma db push --force-reset": "deny",
       "npx sequelize-cli db:drop": "deny",
       "npx typeorm schema:drop": "deny",
-
       "docker network rm *": "ask",
       "docker-compose rm -f": "ask",
       "docker rm -f *": "deny",
@@ -131,20 +127,17 @@
       "docker volume rm *": "deny",
       "docker volume prune": "deny",
       "docker-compose down -v": "deny",
-
       "terraform destroy": "ask",
       "aws s3 rb s3://* --force": "deny",
       "aws s3 rm s3://* --recursive": "deny",
       "az group delete *": "deny",
       "gcloud * delete": "deny",
       "terraform destroy -auto-approve": "deny",
-
       "cat * > .env": "ask",
       "unset *": "ask",
       "history -c": "ask",
       "rm .env*": "deny",
       "rm *.env": "deny",
-
       "find . -name * -delete": "ask",
       "rm -f *": "ask",
       "kill -9 *": "ask",

@@ -1,11 +1,12 @@
 theme = Catppuccin Macchiato
 macos-titlebar-style = hidden
+macos-icon = official
 
-window-padding-x = 10
+window-padding-x = 0
 window-padding-y = 0
 window-padding-balance = true
 
-background-opacity = 0.85
+background-opacity = 0.8
 background-blur = macos-glass-regular
 
 font-thicken = true

@@ -1,6 +1,11 @@
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/bin:$PATH"
-export NODE_EXTRA_CA_CERTS="$HOME/company-ca.pem"
+export NODE_EXTRA_CA_CERTS="$HOME/certs/company-ca.pem"
+export SSL_CERT_FILE="$HOME/certs/combined-ca-bundle.pem"
+export REQUESTS_CA_BUNDLE="$HOME/certs/combined-ca-bundle.pem"
+#export PI_SUBAGENT_MUX=cmux
+export PI_SUBAGENT_SHELL_READY_DELAY_MS=2500
+export DISABLE_UPDATE_PROMPT=true # omz autoupdate
 
 # Set JAVA{version}_HOME only if that JDK is installed
 for _java_v in 17 21; do
@@ -41,6 +46,16 @@ v() {
   nvim "$file"
 }
 
+function yazzi() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	command rm -f -- "$tmp"
+}
+
+alias y="yazzi"
+alias hh="herdr"
 alias vi="nvim"
 alias vim="nvim"
 alias zshrc="nvim ~/.zshrc"

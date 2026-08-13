@@ -41,7 +41,7 @@ function formatTokens(n: number): string {
 }
 
 // Threshold at which the context bar switches from absolute token count to percentage of context window.
-const PHASE1_MAX = 120_000
+const PHASE1_MAX = 140_000
 
 export default function (pi: ExtensionAPI) {
   let updateTimeout: NodeJS.Timeout | null = null
