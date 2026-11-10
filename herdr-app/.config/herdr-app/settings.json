@@ -1,0 +1,12 @@
+{
+  "zoom": 1.0,
+  "sounds": {
+    "enabled": true
+  },
+  "font": "JetBrainsMono Nerd Font Mono",
+  "font_size": 12.0,
+  "font_ligatures": false,
+  "minimum_contrast": 1.0,
+  "appearance": "dark",
+  "theme": "catppuccin-macchiato"
+}
