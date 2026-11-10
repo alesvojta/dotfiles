@@ -1,6 +1,5 @@
 tap "homebrew/services"
 tap "jandedobbeleer/oh-my-posh"
-tap "jundot/omlx", "https://github.com/jundot/omlx", trusted: true
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Get/set bluetooth power and discoverable state
@@ -21,8 +20,6 @@ brew "git"
 brew "python@3.13"
 # Quickly rewrite git repository history
 brew "git-filter-repo"
-# Agent multiplexer that lives in your terminal
-brew "herdr"
 # C/C++ and Java libraries for Unicode and globalization
 brew "icu4c@76"
 # Open-source, cross-platform JavaScript runtime environment
@@ -41,6 +38,8 @@ brew "mkcert"
 brew "mole"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Fast, disk space efficient package manager
+brew "pnpm"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
 # SVG rendering tool and library
@@ -51,6 +50,8 @@ brew "ripgrep"
 brew "sevenzip"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # JavaScript package manager
 brew "yarn"
 # Blazing fast terminal file manager written in Rust, based on async I/O
@@ -59,15 +60,15 @@ brew "yazi"
 brew "zoxide"
 # Prompt theme engine for any shell
 brew "jandedobbeleer/oh-my-posh/oh-my-posh", trusted: true
+# Brings the power of Copilot coding agent directly to your terminal
+cask "copilot-cli"
 cask "font-jetbrains-mono-nerd-font"
-# Terminal emulator that uses platform-native UI and GPU acceleration
-cask "ghostty"
+# Web browser
+cask "google-chrome"
 # Desktop automation application
 cask "hammerspoon"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
-# ZSA keyboard firmware flasher
-cask "keymapp"
 # Tool to control external monitor brightness & volume
 cask "monitorcontrol"
 # Window snapping tool
@@ -81,6 +82,7 @@ cask "wispr-flow"
 npm "@earendil-works/pi-coding-agent"
 npm "@gotgenes/pi-permission-system"
 npm "@tintinweb/pi-subagents"
+npm "ccstatusline"
 npm "corepack"
 npm "pi-extension-manager"
 npm "pi-skills-manager"
