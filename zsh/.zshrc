@@ -2,9 +2,6 @@ export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
-export NODE_EXTRA_CA_CERTS="$HOME/certs/company-ca.pem"
-export SSL_CERT_FILE="$HOME/certs/combined-ca-bundle.pem"
-export REQUESTS_CA_BUNDLE="$HOME/certs/combined-ca-bundle.pem"
 export DISABLE_UPDATE_PROMPT=true # omz autoupdate
 
 # Set JAVA{version}_HOME only if that JDK is installed
@@ -60,3 +57,5 @@ alias vim="nvim"
 alias zshrc="nvim ~/.zshrc"
 alias zshrcs="source ~/.zshrc"
 
+# Machine-specific config (not tracked in dotfiles)
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
