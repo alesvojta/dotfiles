@@ -1,10 +1,10 @@
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
 export NODE_EXTRA_CA_CERTS="$HOME/certs/company-ca.pem"
 export SSL_CERT_FILE="$HOME/certs/combined-ca-bundle.pem"
 export REQUESTS_CA_BUNDLE="$HOME/certs/combined-ca-bundle.pem"
-#export PI_SUBAGENT_MUX=cmux
-export PI_SUBAGENT_SHELL_READY_DELAY_MS=2500
 export DISABLE_UPDATE_PROMPT=true # omz autoupdate
 
 # Set JAVA{version}_HOME only if that JDK is installed
@@ -24,8 +24,12 @@ source $ZSH/oh-my-zsh.sh
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh.toml)"
 fi
-# eval "$(starship init zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+
+if [ -n "$REX_BIN_DIR" ]; then
+    export PATH="$REX_BIN_DIR:$PATH"
+fi
+
+eval "$(zoxide init --cmd cd zsh)" # init zoxide "smarter cd command" as `cd`
 eval "$(fnm env --use-on-cd)"
 
 # Fuzzy git branch switcher using fzf with a preview of the last 20 commits.
@@ -60,3 +64,4 @@ alias vi="nvim"
 alias vim="nvim"
 alias zshrc="nvim ~/.zshrc"
 alias zshrcs="source ~/.zshrc"
+
