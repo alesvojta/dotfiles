@@ -2,7 +2,7 @@
  * Custom Footer Extension
  *
  * Displays a custom footer below the input editor with:
- * - Left: Current directory and git branch
+ * - Left: Current directory
  * - Right: Model and thinking level
  * - Token stats and context window usage
  *
@@ -13,17 +13,6 @@ import type { AssistantMessage } from '@earendil-works/pi-ai'
 import type { ExtensionAPI, ExtensionContext } from '@earendil-works/pi-coding-agent'
 import { truncateToWidth, visibleWidth } from '@earendil-works/pi-tui'
 import { homedir } from 'node:os'
-
-async function getGitBranch(pi: ExtensionAPI, cwd: string): Promise<string | null> {
-  try {
-    const result = await pi.exec('git', ['-C', cwd, 'branch', '--show-current'], { timeout: 2000 })
-    if (result.code !== 0) return null
-    return result.stdout.trim() || null
-  } catch {
-    // git may be unavailable
-    return null
-  }
-}
 
 function formatTokens(n: number): string {
   // Progressive formatting: 12, 55k, 1.2M, 1.5B, etc.
@@ -41,7 +30,7 @@ function formatTokens(n: number): string {
 }
 
 // Threshold at which the context bar switches from absolute token count to percentage of context window.
-const PHASE1_MAX = 120_000
+const PHASE1_MAX = 140_000
 
 export default function (pi: ExtensionAPI) {
   let updateTimeout: NodeJS.Timeout | null = null
@@ -60,31 +49,14 @@ export default function (pi: ExtensionAPI) {
   }
 
   const updateFooter = async (ctx: ExtensionContext) => {
-    const gitBranch = await getGitBranch(pi, ctx.cwd)
-
-    // Cache token stats here (debounced) instead of inside render() (called every frame).
+    // Cache total cost here (debounced) instead of inside render() (called every frame).
     // Use getEntries() (not getBranch()) to include pre-compaction history.
-    let inputTokens = 0
-    let outputTokens = 0
-    let totalCacheRead = 0
-    let totalCacheWrite = 0
     let totalCost = 0
-    let latestCacheHitRate: number | undefined
     try {
       for (const e of ctx.sessionManager.getEntries()) {
         if (e.type === 'message' && e.message.role === 'assistant') {
           const m = e.message as AssistantMessage
-          const cacheRead = m.usage?.cacheRead ?? 0
-          const cacheWrite = m.usage?.cacheWrite ?? 0
-          inputTokens += m.usage?.input ?? 0
-          outputTokens += m.usage?.output ?? 0
-          totalCacheRead += cacheRead
-          totalCacheWrite += cacheWrite
           totalCost += m.usage?.cost?.total ?? 0
-          const latestPromptTokens = (m.usage?.input ?? 0) + cacheRead + cacheWrite
-          if (latestPromptTokens > 0) {
-            latestCacheHitRate = (cacheRead / latestPromptTokens) * 100
-          }
         }
       }
     } catch (err) {
@@ -95,7 +67,6 @@ export default function (pi: ExtensionAPI) {
     const modelId = ctx.model?.id ?? 'no-model'
     const thinkingLevel = pi.getThinkingLevel()
     const contextWindow = ctx.model?.contextWindow ?? 128000
-    const usingSubscription = ctx.model ? ctx.modelRegistry.isUsingOAuth(ctx.model) : false
 
     ctx.ui.setFooter((_tui, theme, footerData) => {
       return {
@@ -104,9 +75,8 @@ export default function (pi: ExtensionAPI) {
           // Context window usage — two-phase progress bar
           const usedTokens = ctx.getContextUsage()?.tokens ?? 0
 
-          // Line 1: cwd + branch | context bar
-          const leftStr = gitBranch ? `${cwdShort} | \uEA68 ${gitBranch}` : cwdShort
-          const leftText = theme.fg('dim', leftStr)
+          // Line 1: cwd | context bar
+          const leftText = theme.fg('dim', cwdShort)
 
           // Phase 1 [square brackets, dim]:  0–PHASE1_MAX, each # = PHASE1_MAX/10 tokens
           // Phase 2 {curly braces, dim/yellow/red}: PHASE1_MAX+, each # = 10% of context window
@@ -140,32 +110,23 @@ export default function (pi: ExtensionAPI) {
               theme.fg('dim', ` ${contextPercent}% (${formatTokens(usedTokens)}/${formatTokens(contextWindow)})`)
           }
 
-          // Line 2: token stats | model + thinking
-          const parts: string[] = []
-          if (inputTokens) parts.push(`↑${formatTokens(inputTokens)}`)
-          if (outputTokens) parts.push(`↓${formatTokens(outputTokens)}`)
-          if (totalCacheRead) parts.push(`R${formatTokens(totalCacheRead)}`)
-          if (totalCacheWrite) parts.push(`W${formatTokens(totalCacheWrite)}`)
-          if ((totalCacheRead > 0 || totalCacheWrite > 0) && latestCacheHitRate !== undefined) {
-            parts.push(`CH${latestCacheHitRate.toFixed(1)}%`)
-          }
-          if (totalCost || usingSubscription) {
-            parts.push(`$${totalCost.toFixed(3)}${usingSubscription ? ' (sub)' : ''}`)
-          }
-          const tokenStats = theme.fg('dim', parts.join(' '))
-          const rightText = theme.fg('dim', `\uEC19 ${modelId} | ${thinkingLevel}`)
-
-          // Check if both lines fit side-by-side
-          const maxLeftWidth = Math.max(visibleWidth(leftText), visibleWidth(tokenStats))
-          const maxRightWidth = Math.max(visibleWidth(contextText), visibleWidth(rightText))
-          const minSpacing = 4
-          const canFitSideBySide = maxLeftWidth + maxRightWidth + minSpacing <= width
+          const costText = totalCost ? `$${totalCost.toFixed(3)}` : ''
+          const rightText = theme.fg(
+            'dim',
+            `${modelId} | ${thinkingLevel}${costText ? ` | ${costText}` : ''}`,
+          )
 
           const statuses = Array.from(footerData.getExtensionStatuses().entries())
             .sort(([a], [b]) => a.localeCompare(b))
             .map(([, text]) => text.replace(/[\r\n\t]+/g, ' ').replace(/ +/g, ' ').trim())
             .filter(Boolean)
-          const statusLine = statuses.length ? truncateToWidth(statuses.join(' '), width) : null
+          const statusLine = statuses.length ? truncateToWidth(statuses.join(' '), width) : ''
+
+          // Check if both lines fit side-by-side
+          const maxLeftWidth = Math.max(visibleWidth(leftText), visibleWidth(statusLine))
+          const maxRightWidth = Math.max(visibleWidth(contextText), visibleWidth(rightText))
+          const minSpacing = 4
+          const canFitSideBySide = maxLeftWidth + maxRightWidth + minSpacing <= width
 
           if (canFitSideBySide) {
             const buildLine = (left: string, right: string) => {
@@ -176,18 +137,15 @@ export default function (pi: ExtensionAPI) {
                 width,
               )
             }
-            return statusLine
-              ? [buildLine(leftText, contextText), buildLine(tokenStats, rightText), statusLine]
-              : [buildLine(leftText, contextText), buildLine(tokenStats, rightText)]
+            return [buildLine(leftText, contextText), buildLine(statusLine, rightText)]
           } else {
             // Stack vertically
             const lines = [
               truncateToWidth(leftText, width),
-              truncateToWidth(tokenStats, width),
+              truncateToWidth(statusLine, width),
               truncateToWidth(contextText, width),
               truncateToWidth(rightText, width),
             ]
-            if (statusLine) lines.push(statusLine)
             return lines
           }
         },
@@ -210,9 +168,7 @@ export default function (pi: ExtensionAPI) {
     }
     if (!foundState) isEnabled = true
 
-    if (isEnabled) {
-      await updateFooter(ctx)
-    }
+    if (isEnabled) await updateFooter(ctx)
   })
 
   pi.on('agent_end', async (_event, ctx) => {

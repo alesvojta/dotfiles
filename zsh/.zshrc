@@ -1,6 +1,11 @@
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/bin:$PATH"
-export NODE_EXTRA_CA_CERTS="$HOME/company-ca.pem"
+export PATH="$HOME/.local/bin:$PATH"
+
+export NODE_EXTRA_CA_CERTS="$HOME/certs/company-ca.pem"
+export SSL_CERT_FILE="$HOME/certs/combined-ca-bundle.pem"
+export REQUESTS_CA_BUNDLE="$HOME/certs/combined-ca-bundle.pem"
+export DISABLE_UPDATE_PROMPT=true # omz autoupdate
 
 # Set JAVA{version}_HOME only if that JDK is installed
 for _java_v in 17 21; do
@@ -20,7 +25,7 @@ if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh.toml)"
 fi
 # eval "$(starship init zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init --cmd cd zsh)" # init zoxide "smarter cd command" as `cd`
 eval "$(fnm env --use-on-cd)"
 
 # Fuzzy git branch switcher using fzf with a preview of the last 20 commits.
@@ -41,7 +46,17 @@ v() {
   nvim "$file"
 }
 
+function yazzi() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    command yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd < "$tmp"
+    [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+    command rm -f -- "$tmp"
+}
+
+alias y="yazzi"
 alias vi="nvim"
 alias vim="nvim"
 alias zshrc="nvim ~/.zshrc"
 alias zshrcs="source ~/.zshrc"
+
