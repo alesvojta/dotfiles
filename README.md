@@ -4,8 +4,9 @@ This repository uses GNU Stow to manage symlinks into your home directory.
 
 ## Requirements
 
-- GNU Stow (`brew install stow`)
 - [Homebrew](https://brew.sh)
+- GNU Stow (`brew install stow`) – needed by `install.sh` / `uninstall.sh`; `bootstrap.sh`
+  installs it from the `Brewfile` itself
 
 ## Usage
 
@@ -49,10 +50,12 @@ Unstow specific packages:
 | Package      | Target file(s)                              |
 |--------------|---------------------------------------------|
 | `bettermouse`| `~/bettermouse.plist`                       |
-| `ghostty`    | `~/.config/ghostty/config.ghostty`          |
 | `git`        | `~/.gitconfig`, `~/.gitignore_global`       |
+| `herdr-app`  | `~/.config/herdr-app/`                      |
 | `nvim`       | `~/.config/nvim/`                           |
 | `ohmyposh`   | `~/.config/ohmyposh.toml`                   |
+| `pi`         | `~/.pi/agent/`                              |
+| `yazi`       | `~/.config/yazi/yazi.toml`                  |
 | `zsh`        | `~/.zshrc`                                  |
 
 Add new packages by creating a top-level folder and placing dotfiles inside it.

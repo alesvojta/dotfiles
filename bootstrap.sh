@@ -15,6 +15,7 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 
 brew bundle --file="$repo_dir/Brewfile"
+require_stow
 
 stowed=()
 skipped=()
