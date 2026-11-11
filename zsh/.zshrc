@@ -1,6 +1,7 @@
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+export EDITOR=nvim VISUAL=nvim
 
 export DISABLE_UPDATE_PROMPT=true # omz autoupdate
 
