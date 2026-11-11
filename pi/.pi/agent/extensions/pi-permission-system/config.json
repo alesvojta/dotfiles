@@ -59,6 +59,7 @@
       "nl *": "allow",
       "ps *": "allow",
       "sed -n *": "allow",
+      "rex *": "allow",
       "hc *": "allow",
       "herdr-app *": "allow",
       "node --version": "allow",
