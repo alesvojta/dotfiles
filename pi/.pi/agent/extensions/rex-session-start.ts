@@ -7,8 +7,17 @@ import { promisify } from "node:util";
 const exec = promisify(execFile);
 const TIMEOUT_MS = 3000;
 
-// Agent-neutrální znění; text už obsahuje i instrukci k pojmenování session
-const SESSION_START_ARGS = ["__internal", "session-start", "--agent", "opencode"];
+// Agent-neutrální znění; pojmenování session se řídí nastavením Rexu
+const sessionStartArgs = (naming: boolean) => [
+  "__internal",
+  "session-start",
+  "--agent",
+  "opencode",
+  `--feature-session-naming=${naming}`,
+];
+
+// Upozornění cílí na `rex skill setup`, které hook pro Pi neumí → pryč z promptu
+const STALE_SETUP = /setup for this agent is out of date/i;
 
 // Stejný příkaz, jaký Rex ukládá agentovi v textu session-start
 const LABEL_ARGS: ((name: string) => string[]) | null = (name) => [
@@ -34,6 +43,25 @@ export default function (pi: ExtensionAPI) {
     }
   }
 
+  // Volba „Let agents name sessions“ tak, jak ji Rex eviduje pro Pi
+  async function namingEnabled(): Promise<boolean> {
+    try {
+      const status = JSON.parse((await rex(["skill", "status", "--json"])) ?? "{}");
+      const harness = status.harnesses?.find((h: { id: string }) => h.id === "pi");
+      return harness?.session_naming === true;
+    } catch {
+      return false;
+    }
+  }
+
+  async function loadContext(): Promise<string | undefined> {
+    const text = await rex(sessionStartArgs(await namingEnabled()));
+    return text
+      ?.split(/\n{2,}/)
+      .filter((paragraph) => !STALE_SETUP.test(paragraph))
+      .join("\n\n");
+  }
+
   async function syncLabel(name: string | undefined) {
     if (!name || !LABEL_ARGS) return;
     await rex(LABEL_ARGS(name));
@@ -41,7 +69,7 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_start", async () => {
     // Neblokuje start; text se vyrenderuje jednou na session → stabilní prompt cache
-    context = rex(SESSION_START_ARGS);
+    context = loadContext();
     void syncLabel(pi.getSessionName()); // resume pojmenované session
   });
 
