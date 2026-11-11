@@ -1,8 +1,12 @@
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
-export EDITOR=nvim VISUAL=nvim
 
+if [ -n "$REX_BIN_DIR" ]; then
+    export PATH="$REX_BIN_DIR:$PATH"
+fi
+
+export EDITOR=nvim VISUAL=nvim
 export DISABLE_UPDATE_PROMPT=true # omz autoupdate
 
 # Set JAVA{version}_HOME only if that JDK is installed
@@ -22,7 +26,7 @@ source $ZSH/oh-my-zsh.sh
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh.toml)"
 fi
-# eval "$(starship init zsh)"
+
 eval "$(zoxide init --cmd cd zsh)" # init zoxide "smarter cd command" as `cd`
 eval "$(fnm env --use-on-cd)"
 
@@ -34,6 +38,12 @@ git_switch_fzf() {
   git switch "$branch"
 }
 alias gco=git_switch_fzf
+
+# Fuzzy file search that prints the selected path.
+ff() {
+  fd --type f --hidden --exclude .git | \
+    fzf --height=70% --layout=reverse --border --padding=1
+}
 
 # Fuzzy file opener using fzf with a preview of the first 200 lines.
 v() {
