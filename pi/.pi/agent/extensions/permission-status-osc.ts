@@ -9,7 +9,7 @@ function report(status: 'working' | 'blocked') {
 }
 
 export default function (pi: ExtensionAPI) {
-  if (!process.env.HC_TERMINAL_ID) return
+  if (!process.env.HC_TERMINAL_ID && !process.env.REX_SESSION) return
 
   pi.events.on('permissions:ui_prompt', (raw) => {
     const event = raw as PermissionUiPromptEvent
