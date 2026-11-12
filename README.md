@@ -33,6 +33,14 @@ Stow specific packages:
 ./install.sh git zsh
 ```
 
+Overwrite existing files in `$HOME` that conflict with the symlinks (lists the files to be replaced
+and asks for `y`/`n` confirmation before deleting anything):
+
+```
+./install.sh --force
+./install.sh --force git zsh
+```
+
 Unstow all packages:
 
 ```
