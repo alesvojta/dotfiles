@@ -7,7 +7,9 @@ import { promisify } from "node:util";
 const exec = promisify(execFile);
 const TIMEOUT_MS = 3000;
 
-// Agent-neutrální znění; pojmenování session se řídí nastavením Rexu
+// `--agent opencode` záměrně, není to chyba z kopírování: od `--agent pi` se
+// text liší jen odkazem na skill („The rex skill (/skill:rex)“), opencode dává
+// agent-neutrální znění. Pojmenování session se řídí nastavením Rexu.
 const sessionStartArgs = (naming: boolean) => [
   "__internal",
   "session-start",
@@ -20,12 +22,17 @@ const sessionStartArgs = (naming: boolean) => [
 const STALE_SETUP = /setup for this agent is out of date/i;
 
 // Stejný příkaz, jaký Rex ukládá agentovi v textu session-start
-const LABEL_ARGS: ((name: string) => string[]) | null = (name) => [
-  "session",
-  "rename",
-  process.env.REX_SESSION ?? "",
-  name,
-];
+const labelArgs = (session: string, label: string) => ["session", "rename", session, label];
+
+// Rex chce label v kebab-case („fix-login-redirect“); /name v Pi je volný text
+function toLabel(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 export default function (pi: ExtensionAPI) {
   let context: Promise<string | undefined> = Promise.resolve(undefined);
@@ -63,8 +70,10 @@ export default function (pi: ExtensionAPI) {
   }
 
   async function syncLabel(name: string | undefined) {
-    if (!name || !LABEL_ARGS) return;
-    await rex(LABEL_ARGS(name));
+    const session = process.env.REX_SESSION;
+    const label = name && toLabel(name);
+    if (!session || !label) return;
+    await rex(labelArgs(session, label));
   }
 
   pi.on("session_start", async () => {
