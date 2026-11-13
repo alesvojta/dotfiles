@@ -10,8 +10,7 @@
     "git:github.com/otahontas/pi-coding-agent-catppuccin",
     "git:github.com/DietrichGebert/ponytail",
     "npm:@gotgenes/pi-permission-system",
-    "npm:pi-updater",
-    "npm:pi-rex-adapter"
+    "npm:pi-updater"
   ],
   "extensions": [],
   "skills": [
