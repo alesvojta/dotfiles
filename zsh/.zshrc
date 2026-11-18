@@ -20,7 +20,7 @@ export JAVA_HOME=${JAVA21_HOME:-${JAVA17_HOME:-}}
 ZSH_THEME=""
 HIST_STAMPS="dd.mm.yyyy"
 
-plugins=(git yarn zsh-autosuggestions zsh-syntax-highlighting zsh-completions fzf )
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions fzf )
 source $ZSH/oh-my-zsh.sh
 
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
